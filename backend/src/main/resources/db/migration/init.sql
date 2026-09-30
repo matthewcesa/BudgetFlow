@@ -20,7 +20,7 @@ $$ language 'plpgsql';
 
 -- Main tables
 -- Users
-CREATE TABLE IF NOT EXISTS USERS (
+CREATE TABLE IF NOT EXISTS user (
                         user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                         -- using UUID more security bc generating 36 random characters than serial
                         email VARCHAR(255) UNIQUE NOT NULL
@@ -36,12 +36,12 @@ CREATE TABLE IF NOT EXISTS USERS (
 
 -- DTrigger for the users table
 CREATE TRIGGER update_users_updated_at
-    BEFORE UPDATE ON USERS
+    BEFORE UPDATE ON user
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 -- ACCOUNTS
-CREATE TABLE accounts (
+CREATE TABLE account (
                           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                           user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                           name VARCHAR(255) NOT NULL,
@@ -56,12 +56,12 @@ CREATE TABLE accounts (
 );
 
 CREATE TRIGGER update_accounts_updated_at
-    BEFORE UPDATE ON accounts
+    BEFORE UPDATE ON account
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 -- categories (user_id NULL then system default
-CREATE TABLE categories (
+CREATE TABLE categorie (
                             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                             user_id UUID REFERENCES users(id) ON DELETE CASCADE,
                             name VARCHAR(255) NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE categories (
 );
 
 -- Csv imports
-CREATE TABLE csv_imports (
+CREATE TABLE csv_import (
                              id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                              user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                              account_id UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
@@ -85,7 +85,7 @@ CREATE TABLE csv_imports (
 );
 
 -- Transactions
-CREATE TABLE transactions (
+CREATE TABLE transaction (
                               id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                               user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                               account_id UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
@@ -102,12 +102,12 @@ CREATE TABLE transactions (
 );
 
 CREATE TRIGGER update_transactions_updated_at
-    BEFORE UPDATE ON transactions
+    BEFORE UPDATE ON transaction
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
--- Transfers
-CREATE TABLE transfers (
+-- Transfer
+CREATE TABLE transfer (
                            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                            user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                            from_account_id UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
@@ -118,8 +118,8 @@ CREATE TABLE transfers (
                            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
--- Budegts
-CREATE TABLE budgets (
+-- Budegt
+CREATE TABLE budget (
                          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                          user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                          category_id UUID NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
@@ -133,12 +133,12 @@ CREATE TABLE budgets (
 );
 
 CREATE TRIGGER update_budgets_updated_at
-    BEFORE UPDATE ON budgets
+    BEFORE UPDATE ON budget
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 -- Budget_periods (History)
-CREATE TABLE budget_periods (
+CREATE TABLE budget_period (
                                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                 budget_id UUID NOT NULL REFERENCES budgets(id) ON DELETE CASCADE,
                                 period_start DATE NOT NULL,
@@ -148,7 +148,7 @@ CREATE TABLE budget_periods (
 );
 
 -- Goals
-CREATE TABLE goals (
+CREATE TABLE goal (
                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                        user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                        name VARCHAR(255) NOT NULL,
@@ -164,12 +164,12 @@ CREATE TABLE goals (
 );
 
 CREATE TRIGGER update_goals_updated_at
-    BEFORE UPDATE ON goals
+    BEFORE UPDATE ON goal
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 -- GOAL_CONTRIBUTIONS
-CREATE TABLE goal_contributions (
+CREATE TABLE goal_contribution (
                                     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                     goal_id UUID NOT NULL REFERENCES goals(id) ON DELETE CASCADE,
                                     amount NUMERIC(15, 2) NOT NULL,
@@ -178,7 +178,7 @@ CREATE TABLE goal_contributions (
 );
 
 -- RECURRING_TRANSACTIONS
-CREATE TABLE recurring_transactions (
+CREATE TABLE recurring_transaction (
                                         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                         user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                                         account_id UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
@@ -193,12 +193,12 @@ CREATE TABLE recurring_transactions (
 );
 
 CREATE TRIGGER update_recurring_transactions_updated_at
-    BEFORE UPDATE ON recurring_transactions
+    BEFORE UPDATE ON recurring_transaction
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
 -- INSIGHTS
-CREATE TABLE insights (
+CREATE TABLE insight (
                           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                           user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                           type insight_type NOT NULL,
@@ -210,7 +210,7 @@ CREATE TABLE insights (
 );
 
 -- CSV_COLUMN_MAPPINGS
-CREATE TABLE csv_column_mappings (
+CREATE TABLE csv_column_mapping (
                                      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                                      user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                                      account_id UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
@@ -224,6 +224,6 @@ CREATE TABLE csv_column_mappings (
 );
 
 CREATE TRIGGER update_csv_column_mappings_updated_at
-    BEFORE UPDATE ON csv_column_mappings
+    BEFORE UPDATE ON csv_column_mapping
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
