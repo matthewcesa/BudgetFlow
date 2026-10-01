@@ -1,8 +1,7 @@
 package entity;
 
-import entity.enums.Plan_type;
+import entity.enums.Account_type;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,40 +11,47 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
-@Getter
+@Table(name = "account")
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID user_id;
+    private UUID account_id;
 
-    @Email
-    @Column(nullable = false, unique = true)
-    private String email;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(name = "avatar_url", length = 500)
-    private String text;
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM) // pour pas envoyer un varchar a postgres
+    @Column(nullable = false, length = 20)
+    private Account_type type;
+
+    @Column(nullable = false, precision = 14, scale = 2)
+    private BigDecimal balance = BigDecimal.ZERO;
+
+    @Column(length = 7)
+    private String color;
+
+    @Column(length = 100)
+    private String institution;
 
     @Column(nullable = false, length = 3)
     private String currency = "EUR";
 
-    @Column(nullable = false, length = 10)
-    private String locale = "fr-FR";
-
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM) // pour pas envoyer un varchar a postgres
-    @Column(nullable = false)
-    private Plan_type plan = Plan_type.FREE;
+    @Column(name = "is_active", nullable = false)
+    private boolean active = true;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -54,4 +60,5 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
 }
