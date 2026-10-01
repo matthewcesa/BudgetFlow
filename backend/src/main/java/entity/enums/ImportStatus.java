@@ -1,5 +1,5 @@
 package entity.enums;
 
-public enum Import_status {
+public enum ImportStatus {
     PENDING, MAPPING, DONE, ERROR
 }

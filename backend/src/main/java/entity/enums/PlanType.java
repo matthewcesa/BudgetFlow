@@ -1,5 +1,5 @@
 package entity.enums;
 
-public enum Plan_type {
+public enum PlanType {
     FREE, PRO
 }

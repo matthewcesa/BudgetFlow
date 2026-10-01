@@ -1,6 +1,6 @@
 package entity;
 
-import entity.enums.Import_status;
+import entity.enums.ImportStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,8 +39,8 @@ public class CsvImport {
     private String filename;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM) // pour pas envoyer un varchar a postgres
-    @Column(nullable = false)
-    private Import_status import_status = Import_status.PENDING;
+    @Column(name = "status", nullable = false, columnDefinition = "import_status")
+    private ImportStatus import_status = ImportStatus.PENDING;
 
     @Column(name = "rows_total", nullable = false)
     private BigDecimal rowsTotal = BigDecimal.ZERO;

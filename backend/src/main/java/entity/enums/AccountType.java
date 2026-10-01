@@ -1,6 +1,6 @@
 package entity.enums;
 
-public enum Account_type
+public enum AccountType
 {
     CHECKING, SAVINGS, CRYPTO, INVESTMENT, CREDIT
 }

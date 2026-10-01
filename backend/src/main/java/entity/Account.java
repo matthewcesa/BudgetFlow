@@ -1,6 +1,6 @@
 package entity;
 
-import entity.enums.Account_type;
+import entity.enums.AccountType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,8 +35,8 @@ public class Account {
     private String name;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM) // pour pas envoyer un varchar a postgres
-    @Column(nullable = false, length = 20)
-    private Account_type type;
+    @Column(name = "type", nullable = false, columnDefinition = "account_type", length = 20)
+    private AccountType type;
 
     @Column(nullable = false, precision = 14, scale = 2)
     private BigDecimal balance = BigDecimal.ZERO;

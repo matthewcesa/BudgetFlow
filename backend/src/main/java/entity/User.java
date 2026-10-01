@@ -1,6 +1,6 @@
 package entity;
 
-import entity.enums.Plan_type;
+import entity.enums.PlanType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -44,8 +44,8 @@ public class User {
     private String locale = "fr-FR";
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM) // pour pas envoyer un varchar a postgres
-    @Column(nullable = false)
-    private Plan_type plan = Plan_type.FREE;
+    @Column(name = "plan", nullable = false, columnDefinition = "plan_type")
+    private PlanType plan = PlanType.FREE;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
